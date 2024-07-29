@@ -6,6 +6,7 @@ export async function createUser(user: User) {
         data: user,
     });
 };
+// comentario para mostrar funcionamento de branchs
 
 export async function getUserByID(id: number) {
     return await prisma.user.findUnique({ where: { id } })

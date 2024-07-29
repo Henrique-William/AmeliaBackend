@@ -10,3 +10,11 @@ export async function getUser(req: Request, res: Response) {
         res.status(404).send('User not found');
     }
 };
+
+export function authenticate(req: Request, res: Response) {
+    const user = req.body as User;
+    if (!user.email || !user.password) {
+        return res.status(400).send('Email and password are required');
+    }
+    const isUserAuthenticated = userService.authenticateUser(user);
+}

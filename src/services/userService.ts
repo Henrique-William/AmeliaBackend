@@ -6,14 +6,13 @@ export async function createUser(user: User) {
         data: user,
     });
 };
-// comentario para mostrar funcionamento de branchs
 
 export async function getUserByID(id: number) {
-    return await prisma.user.findUnique({ where: { id } })
+    return await prisma.user.findUnique({ where: { id }, select: { email: true, id: true } })
 }
 
-export function authenticateUser(user: User) {
-    try{
+export async function authenticateUser(user: User) {
+    try {
         const currentUser = await prisma.user.findUnique({
             where: {
                 email: user.email,
@@ -22,7 +21,17 @@ export function authenticateUser(user: User) {
         if (!currentUser) {
             return false;
         }
+
+        const isUserAuthenticated = currentUser.password === user.password;
+
+        if (isUserAuthenticated) {
+            return { id: currentUser.id, email: currentUser.email };
+        }
         // bcrypt password comparison
-        
+        // return await bcrypt.compare(user.password, currentUser.password);
+    }
+    catch (error) {
+        console.log(error);
+        return false;
     }
 }
